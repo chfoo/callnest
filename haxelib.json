@@ -1,0 +1,14 @@
+{
+  "name": "callnest",
+  "url" : "https://github.com/chfoo/callnest/",
+  "license": "MIT",
+  "tags": ["cross"],
+  "description": "Yet another future/promise/task/asynchronous library",
+  "version": "0.1.0",
+  "classPath": "src/",
+  "releasenote": "Initial release",
+  "contributors": ["chfoo"],
+  "dependencies": {
+    "exception": "1.0.2"
+  }
+}
