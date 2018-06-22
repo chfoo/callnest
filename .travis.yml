@@ -2,6 +2,7 @@ language: haxe
 
 install:
   - yes | haxelib install test.hxml
+  - yes | haxelib install hxml/test.cpp.hxml
 
 script:
   - haxe hxml/test.neko.hxml
