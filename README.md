@@ -379,3 +379,12 @@ Further reading
 ---------------
 
 For details, see the API documentation at https://chfoo.github.io/callnest/api/
+
+
+Development
+-----------
+
+Running tests:
+
+        haxelib haxe hxml/test.neko.hxml && neko out/neko/test.n
+        haxelib haxe hxml/test.cpp.hxml && ./out/cpp/TestAll-debug

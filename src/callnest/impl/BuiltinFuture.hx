@@ -87,10 +87,14 @@ class BuiltinFuture<T> implements Future<T> {
         }
     }
 
-    public function cancel():Void {
+    public function cancel():Bool {
         if (!isComplete) {
             _status = Canceled;
             runCallbacks();
+
+            return true;
+        } else {
+            return false;
         }
     }
 

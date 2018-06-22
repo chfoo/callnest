@@ -61,8 +61,11 @@ interface Future<T> {
 
     /**
         Cancels the future.
+
+        Returns `true` if the future was canceled. Returns `false` if
+        the future was already complete.
     **/
-    function cancel():Void;
+    function cancel():Bool;
 
     /**
         Calls the callback when the future enters the completed status.

@@ -71,7 +71,7 @@ class TestFuture {
         Assert.equals(None, future.result);
         Assert.equals(None, future.exception);
 
-        future.cancel();
+        Assert.isTrue(future.cancel());
 
         Assert.isFalse(future.hasException);
         Assert.isFalse(future.hasResult);
@@ -82,6 +82,8 @@ class TestFuture {
 
         Assert.raises(source.setResult.bind(4), InvalidStateException);
         Assert.raises(source.setException.bind("a"), InvalidStateException);
+
+        Assert.isFalse(future.cancel());
     }
 
     public function testOnCompleteResult() {
