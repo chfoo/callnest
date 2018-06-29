@@ -3,6 +3,7 @@ package callnest;
 import callnest.impl.BuiltinFutureSource;
 import callnest.impl.BuiltinTaskSource;
 import callnest.impl.SynchronousScheduler;
+import haxe.CallStack;
 
 
 /**
@@ -55,7 +56,9 @@ class TaskDefaults {
         handling.
     **/
     public dynamic static function handleException(exception:Any) {
-        trace(exception);
+        trace('Unhandled exception: $exception');
+        trace('Call stack: ${CallStack.toString(CallStack.callStack())}');
+        trace('Exception stack: ${CallStack.toString(CallStack.exceptionStack())}');
         throw exception;
     }
 }
