@@ -44,6 +44,11 @@ class TestTaskTools {
         Assert.same(tasks, result);
     }
 
+    public function testWhenAllEmpty() {
+        var allTask = TaskTools.whenAll([]);
+        Assert.isTrue(allTask.isComplete);
+    }
+
     public function testWhenAny() {
         var taskSources = [];
         var tasks = [];
@@ -65,5 +70,9 @@ class TestTaskTools {
         var result = anyTask.getResult();
 
         Assert.same(tasks[3], result);
+    }
+
+    public function testWhenAnyEmpty() {
+        Assert.raises(TaskTools.whenAny.bind([]), Exception);
     }
 }

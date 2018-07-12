@@ -32,12 +32,17 @@ class TaskTools {
         var allTasks = [];
         var remainingCount = 0;
         var remainingTasks = new Map<Task<T>,Bool>();
-        var taskSource = TaskDefaults.newTaskSource();
+        var taskSource:TaskSource<Iterable<Task<T>>> = TaskDefaults.newTaskSource();
 
         for (task in tasks) {
             allTasks.push(task);
             remainingTasks.set(task, true);
             remainingCount += 1;
+        }
+
+        if (allTasks.length == 0) {
+            taskSource.setResult([]);
+            return taskSource.task;
         }
 
         function callback(task:Task<T>) {
@@ -46,7 +51,7 @@ class TaskTools {
             }
 
             if (remainingCount == 0) {
-                taskSource.setResult((allTasks:Iterable<Task<T>>));
+                taskSource.setResult(allTasks);
             }
         }
 
@@ -63,6 +68,7 @@ class TaskTools {
     **/
     public static function whenAny<T>(tasks:Iterable<Task<T>>):Task<Task<T>> {
         var taskSource = TaskDefaults.newTaskSource();
+        var count = 0;
 
         function callback(task:Task<T>) {
             if (!taskSource.task.isComplete) {
@@ -72,6 +78,11 @@ class TaskTools {
 
         for (task in tasks) {
             task.onComplete(callback);
+            count += 1;
+        }
+
+        if (count == 0) {
+            throw new Exception("tasks cannot be empty");
         }
 
         return taskSource.task;
