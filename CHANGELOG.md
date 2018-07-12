@@ -1,8 +1,8 @@
 Change Log
 ==========
 
-Unreleased
-----------
+0.2.0 (2018-07-12)
+------------------
 
 * Added `TaskTools.whenAny` and `TaskTools.whenAll`.
 * Changed default exception handler to trace out call stacks instead of just the exception.
