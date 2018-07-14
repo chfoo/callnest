@@ -89,18 +89,75 @@ class TaskTools {
     }
 
     /**
-        Chains a given task, that does not use the prior result, to be
-        executed when the task completes.
+        Chains and returns a task using the given callback that returns a
+        task.
 
-        This static extension method is intended for tasks where
-        the intermediate result is not going to be used.
-        The task is consumed in order to properly propagate exceptions.
+        This is a convenience method to `Task.continueWith` that:
+
+        1. Calls `Task.getResult`
+        2. Discards the result (but still propagates exceptions)
+        3. Returns a task returned by the callback
     **/
-    public static function completeNext<T,TNext>(task:Task<T>,
+    public static function continueNext<T,TNext>(task:Task<T>,
             callback:Void->Task<TNext>):Task<TNext> {
         return task.continueWith(function (task) {
             task.getResult();
             return callback();
+        });
+    }
+
+    /**
+        Chains and returns a task using the given callback that accepts and
+        returns a result.
+
+        This is a convenience method to `Task.continueWith` that:
+
+        1. Calls `Task.getResult`
+        2. Passes the result to the given callback
+        3. Creates a new task with the result set to the given callback's
+            return value
+    **/
+    public static function thenContinue<T,TNext>(task:Task<T>,
+            callback:T->TNext):Task<TNext> {
+        return task.continueWith(function (task) {
+            var result = task.getResult();
+            return fromResult(callback(result));
+        });
+    }
+
+    /**
+        Chains and returns a task using the given callback that returns a
+        result.
+
+        This is a convenience method to `Task.continueWith` that:
+
+        1. Calls `Task.getResult`
+        2. Discards the result (but still propagates exceptions)
+        3. Creates a new task with the result set to the given callback's
+            return value
+    **/
+    public static function thenNext<T,TNext>(task:Task<T>,
+            callback:Void->TNext):Task<TNext> {
+        return task.continueWith(function (task) {
+            task.getResult();
+            return fromResult(callback());
+        });
+    }
+
+    /**
+        Chains and returns a task with the given result.
+
+        This is a convenience method to `Task.continueWith` that:
+
+        1. Calls `Task.getResult`
+        2. Discards the result (but still propagates exceptions)
+        3. Creates a new task with the result set to the given value
+    **/
+    public static function thenResult<T,TNext>(task:Task<T>,
+            result:TNext):Task<TNext> {
+        return task.continueWith(function (task) {
+            task.getResult();
+            return fromResult(result);
         });
     }
 }

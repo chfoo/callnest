@@ -78,12 +78,12 @@ class TestTaskTools {
         Assert.raises(TaskTools.whenAny.bind([]), Exception);
     }
 
-    public function testCompleteNext() {
+    public function testContinueNext() {
         var source:TaskSource<Int> = TaskDefaults.newTaskSource();
         var task = source.task;
         var done = Assert.createAsync();
 
-        task.completeNext(TaskTools.fromResult.bind(100))
+        task.continueNext(TaskTools.fromResult.bind(100))
             .onComplete(function (task) {
                 var result = task.getResult();
                 Assert.equals(100, result);
@@ -91,5 +91,56 @@ class TestTaskTools {
             });
 
         source.setResult(50);
+    }
+
+    public function testThenContinue() {
+        var source:TaskSource<Int> = TaskDefaults.newTaskSource();
+        var task = source.task;
+        var done = Assert.createAsync();
+
+        task.thenContinue(
+            function (result:Int) {
+                return result + 1;
+            })
+            .onComplete(function (task) {
+                var result = task.getResult();
+                Assert.equals(101, result);
+                done();
+            });
+
+        source.setResult(100);
+    }
+
+    public function testThenNext() {
+        var source:TaskSource<Int> = TaskDefaults.newTaskSource();
+        var task = source.task;
+        var done = Assert.createAsync();
+
+        task.thenNext(
+            function () {
+                return 200;
+            })
+            .onComplete(function (task) {
+                var result = task.getResult();
+                Assert.equals(200, result);
+                done();
+            });
+
+        source.setResult(100);
+    }
+
+    public function testThenResult() {
+        var source:TaskSource<Int> = TaskDefaults.newTaskSource();
+        var task = source.task;
+        var done = Assert.createAsync();
+
+        task.thenResult(200)
+            .onComplete(function (task) {
+                var result = task.getResult();
+                Assert.equals(200, result);
+                done();
+            });
+
+        source.setResult(100);
     }
 }

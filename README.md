@@ -224,6 +224,69 @@ In the example above, `Task.continueWith()` accepts a callback that will process
 
 If an exception is thrown within `continueWith()`, the exception will be caught and a new `Task` with the exception will be passed along to a subsequent `continueWith()` or `onSuccess()` method calls.
 
+
+### Unused results
+
+If you need to use tasks that don't have a useful return, you can use the `VoidReturn` enum:
+
+```haxe
+import callnest.VoidReturn;
+
+function doSomething():Task<VoidReturn> {
+    // Do work
+    source.setResult(Nothing);
+}
+
+doSomething()
+    .onComplete(doFinishingWork);
+```
+
+Note that using `Void` may be allowed in some instances, but it may be a bug in Haxe and is not supported in some targets.
+
+
+### Convenience methods for chaining tasks
+
+If you chain tasks that don't use the prior result in this processing, then `TaskTools.continueNext` may be used:
+
+```haxe
+using callnest.TaskTools;
+
+function doSomething():Task<VoidReturn> {
+    // Do work
+    source.setResult(VoidReturn);
+}
+
+function doSomethingElse():Task<VoidReturn> {
+    // Do work
+    source.setResult(VoidReturn);
+}
+
+doSomething()
+    .continueNext(doSomethingElse)
+    .onComplete(doFinishingWork);
+```
+
+Additionally, if you chain tasks that don't need fine grain control or exception handling, `TaskTools` provides "then" methods that skip task boilerplate code:
+
+```haxe
+using callnest.TaskTools;
+
+function doSomething():Task<Int> {
+    // Do work
+    source.setResult(123);
+}
+
+
+doSomething()
+    .thenContinue(function (result:Int) { return result + 1; })
+    .thenNext(function () { return 100; })
+    .thenResult(200)
+    .onComplete(function (task:Task<Int>) {
+        trace(task.getResult()); // => 200
+    });
+```
+
+
 ### Cancellation
 
 Both `Future` and `Task` support cancellation. When the `cancel()` method is called, the instance goes into the cancelled state and further changes to result and exception values will throw an exception.
@@ -368,33 +431,6 @@ TaskTools.sum([task1, task2, task3])
         trace('The result is $sum');
     });
 ```
-
-### Unused results
-
-If you need to use tasks that don't have a useful return, or need to chain tasks that don't use the prior result, you can use the `VoidReturn` enum and `TaskTools.completeNext`:
-
-```haxe
-
-import callnest.VoidReturn;
-
-using callnest.TaskTools;
-
-function doSomething():Task<VoidReturn> {
-    // Do work
-    source.setResult(Nothing);
-}
-
-function doSomethingElse():Task<Int> {
-    // Do more work
-    source.setResult(123);
-}
-
-doSomething()
-    .completeNext(doSomethingElse)
-    .onComplete(doFinishingWork);
-```
-
-Note that using `Void` may be allowed in some instances, but it is not supported.
 
 
 Thread Safety

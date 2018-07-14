@@ -4,7 +4,7 @@ Change Log
 Unreleased
 ----------
 
-* Added `TaskTools.completeNext`.
+* Added `TaskTools.continueNext`, `TaskTools.thenContinue`, `TaskTools.thenNext`, `TaskTools.thenResult`.
 * Added `VoidReturn`.
 
 
