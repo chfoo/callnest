@@ -4,7 +4,7 @@ Change Log
 Unreleased
 ----------
 
-* Added `TaskTools.continueTask`.
+* Added `TaskTools.completeNext`.
 * Added `VoidReturn`.
 
 

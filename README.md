@@ -371,7 +371,7 @@ TaskTools.sum([task1, task2, task3])
 
 ### Unused results
 
-If you need to use tasks that don't have a useful return, or need to chain tasks that don't use the prior result, you can use the `VoidReturn` enum and `TaskTools.continueTask`:
+If you need to use tasks that don't have a useful return, or need to chain tasks that don't use the prior result, you can use the `VoidReturn` enum and `TaskTools.completeNext`:
 
 ```haxe
 
@@ -390,7 +390,7 @@ function doSomethingElse():Task<Int> {
 }
 
 doSomething()
-    .continueTask(doSomethingElse)
+    .completeNext(doSomethingElse)
     .onComplete(doFinishingWork);
 ```
 

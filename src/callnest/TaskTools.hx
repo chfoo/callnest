@@ -96,7 +96,7 @@ class TaskTools {
         the intermediate result is not going to be used.
         The task is consumed in order to properly propagate exceptions.
     **/
-    public static function continueTask<T,TNext>(task:Task<T>,
+    public static function completeNext<T,TNext>(task:Task<T>,
             callback:Void->Task<TNext>):Task<TNext> {
         return task.continueWith(function (task) {
             task.getResult();
