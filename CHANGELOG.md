@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+Unreleased
+----------
+
+* Added `TaskTools.continueTask`.
+* Added `VoidReturn`.
+
+
 0.2.0 (2018-07-12)
 ------------------
 

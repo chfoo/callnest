@@ -87,4 +87,20 @@ class TaskTools {
 
         return taskSource.task;
     }
+
+    /**
+        Chains a given task, that does not use the prior result, to be
+        executed when the task completes.
+
+        This static extension method is intended for tasks where
+        the intermediate result is not going to be used.
+        The task is consumed in order to properly propagate exceptions.
+    **/
+    public static function continueTask<T,TNext>(task:Task<T>,
+            callback:Void->Task<TNext>):Task<TNext> {
+        return task.continueWith(function (task) {
+            task.getResult();
+            return callback();
+        });
+    }
 }

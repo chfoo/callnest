@@ -1,7 +1,9 @@
 package callnest.test;
 
-
 import utest.Assert;
+
+using callnest.TaskTools;
+
 
 class TestTaskTools {
     public function new() {
@@ -74,5 +76,20 @@ class TestTaskTools {
 
     public function testWhenAnyEmpty() {
         Assert.raises(TaskTools.whenAny.bind([]), Exception);
+    }
+
+    public function testContinueTask() {
+        var source:TaskSource<Int> = TaskDefaults.newTaskSource();
+        var task = source.task;
+        var done = Assert.createAsync();
+
+        task.continueTask(TaskTools.fromResult.bind(100))
+            .onComplete(function (task) {
+                var result = task.getResult();
+                Assert.equals(100, result);
+                done();
+            });
+
+        source.setResult(50);
     }
 }

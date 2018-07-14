@@ -369,6 +369,34 @@ TaskTools.sum([task1, task2, task3])
     });
 ```
 
+### Unused results
+
+If you need to use tasks that don't have a useful return, or need to chain tasks that don't use the prior result, you can use the `VoidReturn` enum and `TaskTools.continueTask`:
+
+```haxe
+
+import callnest.VoidReturn;
+
+using callnest.TaskTools;
+
+function doSomething():Task<VoidReturn> {
+    // Do work
+    source.setResult(Nothing);
+}
+
+function doSomethingElse():Task<Int> {
+    // Do more work
+    source.setResult(123);
+}
+
+doSomething()
+    .continueTask(doSomethingElse)
+    .onComplete(doFinishingWork);
+```
+
+Note that using `Void` may be allowed in some instances, but it is not supported.
+
+
 Thread Safety
 -------------
 
