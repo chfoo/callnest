@@ -1,5 +1,7 @@
 package callnest.impl;
 
+import haxe.CallStack;
+
 
 class BuiltinFutureSource<T> implements FutureSource<T> {
     public var future(get, never):Future<T>;
@@ -22,7 +24,7 @@ class BuiltinFutureSource<T> implements FutureSource<T> {
         _future.setResult(result);
     }
 
-    public function setException(exception:Any) {
-        _future.setException(exception);
+    public function setException(exception:Any, ?callStack:Array<StackItem>) {
+        _future.setException(exception, callStack);
     }
 }

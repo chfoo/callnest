@@ -55,10 +55,24 @@ class TaskDefaults {
         This function can be reassigned to provide your own global error
         handling.
     **/
-    public dynamic static function handleException(exception:Any) {
-        trace('Unhandled exception: $exception');
+    public dynamic static function handleException(info:ExceptionInfo) {
+        trace('Unhandled exception: ${info.exception}');
+
+        var callStack;
+
+        switch info.callStack {
+            case Some(callStack_):
+                callStack = callStack_;
+            case None:
+                callStack = CallStack.exceptionStack();
+        }
+
+        trace('Exception stack: ${CallStack.toString(callStack)}');
+
+        #if debug
         trace('Call stack: ${CallStack.toString(CallStack.callStack())}');
-        trace('Exception stack: ${CallStack.toString(CallStack.exceptionStack())}');
-        throw exception;
+        #end
+
+        throw info.exception;
     }
 }

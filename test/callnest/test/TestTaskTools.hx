@@ -1,6 +1,7 @@
 package callnest.test;
 
 import utest.Assert;
+import haxe.ds.Option;
 
 using callnest.TaskTools;
 
@@ -16,9 +17,10 @@ class TestTaskTools {
     }
 
     public function testFromException() {
-        var task = TaskTools.fromException("my exception");
+        var task = TaskTools.fromException("my exception", []);
 
         Assert.raises(task.getResult, String);
+        Assert.notEquals(None, task.exceptionCallStack);
     }
 
     public function testWhenAll() {

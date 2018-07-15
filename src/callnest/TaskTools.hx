@@ -1,5 +1,6 @@
 package callnest;
 
+import haxe.CallStack;
 
 /**
     Task manipulation methods.
@@ -17,9 +18,10 @@ class TaskTools {
     /**
         Returns a completed Task with the given exception.
     **/
-    public static function fromException<T>(exception:Any):Task<T> {
+    public static function fromException<T>(exception:Any,
+            ?callStack:Array<StackItem>):Task<T> {
         var source = TaskDefaults.newTaskSource();
-        source.setException(exception);
+        source.setException(exception, callStack);
         return source.task;
     }
 

@@ -149,17 +149,18 @@ class TestFuture {
     public function testHandleException() {
         var source = TaskDefaults.newFutureSource();
         var future = source.future;
-        var caughtException:Any = null;
+        var exceptionInfo:ExceptionInfo = null;
         var done = Assert.createAsync(function () {
-            Assert.equals("my exception", caughtException);
+            Assert.equals("my exception", exceptionInfo.exception);
+            Assert.notEquals(None, exceptionInfo.callStack);
         });
 
         future
             .onComplete(function (future) {
                 throw "my exception";
             })
-            .handleException(function (exception:Any) {
-                caughtException = exception;
+            .handleException(function (info:ExceptionInfo) {
+                exceptionInfo = info;
                 done();
             });
 

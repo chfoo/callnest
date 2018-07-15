@@ -1,5 +1,7 @@
 package callnest;
 
+import haxe.CallStack;
+
 
 /**
     Asynchronous producer.
@@ -20,6 +22,11 @@ interface FutureSource<T> {
 
     /**
         Resolve the future with an exception instance.
+
+        @param exception Any instance representing an exception.
+        @param callStack Optional call stack of the exception. It is typically
+            obtained using `CallStack.exceptionStack()` when catching a thrown
+            exception. Use `CallStack.callStack()` otherwise.
     **/
-    function setException(exception:Any):Void;
+    function setException(exception:Any, ?callStack:Array<StackItem>):Void;
 }

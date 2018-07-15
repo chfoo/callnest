@@ -17,7 +17,7 @@ interface Task<T> extends Future<T> {
     /**
         See `Future.handleException`.
     **/
-    function handleException(handler:Any->Void):Task<T>;
+    function handleException(handler:ExceptionInfo->Void):Task<T>;
 
     /**
         Chains a given task to be executed when this task completes.

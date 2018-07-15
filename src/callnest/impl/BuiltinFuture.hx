@@ -2,12 +2,14 @@ package callnest.impl;
 
 import callnest.CompletionStatus;
 import callnest.Exception;
+import haxe.CallStack;
 import haxe.ds.Option;
 
 
 class BuiltinFuture<T> implements Future<T> {
     public var result(get, never):Option<T>;
     public var exception(get, never):Option<Any>;
+    public var exceptionCallStack(get, never):Option<Array<StackItem>>;
     public var status(get, never):CompletionStatus;
     public var isComplete(get, never):Bool;
     public var isCanceled(get, never):Bool;
@@ -16,9 +18,10 @@ class BuiltinFuture<T> implements Future<T> {
 
     var _result:Option<T> = None;
     var _exception:Option<Any> = None;
+    var _exceptionCallStack:Option<Array<StackItem>> = None;
     var _status:CompletionStatus = Created;
     var _completeCallbacks:Array<Future<T>->Void>;
-    var _exceptionHandler:Any->Void;
+    var _exceptionHandler:ExceptionInfo->Void;
 
     public function new() {
         _completeCallbacks = [];
@@ -30,6 +33,10 @@ class BuiltinFuture<T> implements Future<T> {
 
     function get_exception():Option<Any> {
         return _exception;
+    }
+
+    function get_exceptionCallStack():Option<Array<StackItem>> {
+        return _exceptionCallStack;
     }
 
     function get_status():CompletionStatus {
@@ -108,7 +115,7 @@ class BuiltinFuture<T> implements Future<T> {
         return this;
     }
 
-    public function handleException(handler:Any->Void):Future<T> {
+    public function handleException(handler:ExceptionInfo->Void):Future<T> {
         if (_exceptionHandler != null) {
             throw new InvalidStateException("Exception handler already set.");
         }
@@ -128,10 +135,15 @@ class BuiltinFuture<T> implements Future<T> {
         try {
             callback(this);
         } catch (exception:Any) {
+            var info:ExceptionInfo = {
+                exception: exception,
+                callStack: Some(CallStack.exceptionStack())
+            };
+
             if (_exceptionHandler == null) {
-                TaskDefaults.handleException(exception);
+                TaskDefaults.handleException(info);
             } else {
-                _exceptionHandler(exception);
+                _exceptionHandler(info);
             }
         }
     }
@@ -145,9 +157,14 @@ class BuiltinFuture<T> implements Future<T> {
     }
 
     @:allow(callnest.impl)
-    function setException(exception:Any) {
+    function setException(exception:Any, ?callStack:Array<StackItem>) {
         throwIfCanceledOrComplete();
         _exception = Some(exception);
+
+        if (callStack != null) {
+            _exceptionCallStack = Some(callStack);
+        }
+
         _status = Faulted;
         runCallbacks();
     }

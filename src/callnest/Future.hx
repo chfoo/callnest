@@ -1,5 +1,6 @@
 package callnest;
 
+import haxe.CallStack;
 import haxe.ds.Option;
 
 /**
@@ -22,6 +23,13 @@ interface Future<T> {
         Exception from the source when completed.
     **/
     var exception(get, never):Option<Any>;
+
+    /**
+        Call stack of the exception.
+
+        This value may be None or an empty array if `exception` is set.
+    **/
+    var exceptionCallStack(get, never):Option<Array<StackItem>>;
 
     /**
         State of the future.
@@ -80,5 +88,5 @@ interface Future<T> {
 
         By default, the global error handler is used.
     **/
-    function handleException(handler:Any->Void):Future<T>;
+    function handleException(handler:ExceptionInfo->Void):Future<T>;
 }

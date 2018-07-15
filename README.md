@@ -76,8 +76,8 @@ download()
     .onComplete(function (future) {
         1 / 0; // oops!
     })
-    .handleException(function (exception:Any) {
-        trace('Internal error! Something has gone wrong: $exception');
+    .handleException(function (info:ExceptionInfo) {
+        trace('Internal error! Something has gone wrong: ${info.exception}');
         shutdown();
     });
 ```

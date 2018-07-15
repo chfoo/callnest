@@ -1,5 +1,6 @@
 package callnest.test;
 
+import haxe.ds.Option;
 import haxe.Timer;
 import utest.Assert;
 
@@ -52,12 +53,14 @@ class TestTask {
             .onComplete(function (task:Task<Bool>) {
                 Assert.isTrue(task.hasException);
                 Assert.raises(task.getResult, String);
-                switch (task.exception) {
+                switch task.exception {
                     case Some(exception):
                         Assert.equals("my exception", exception);
                     case None:
                         Assert.fail();
                 }
+                Assert.notEquals(None, task.exceptionCallStack);
+
                 done();
             });
 
