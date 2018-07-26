@@ -1,8 +1,8 @@
 Change Log
 ==========
 
-Unreleased
-----------
+0.3.0 (2018-7-26)
+-----------------
 
 * Added `TaskTools.continueNext()`, `TaskTools.thenContinue()`, `TaskTools.thenNext()`, `TaskTools.thenResult()`.
 * Added `VoidReturn`.

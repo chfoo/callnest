@@ -4,7 +4,7 @@
   "license": "MIT",
   "tags": ["cross"],
   "description": "Yet another future/promise/task/asynchronous library",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "classPath": "src/",
   "releasenote": "Added more methods to TaskTools (see changelog)",
   "contributors": ["chfoo"],
